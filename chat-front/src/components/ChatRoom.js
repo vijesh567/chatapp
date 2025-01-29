@@ -6,35 +6,33 @@ const ChatRoom = () => {
 	const [messages, setMessages] = useState([]);
 	const [user, setUser] = useState('');
 	const [message, setMessage] = useState('');
-
+	const BACKEND_URL = 'https://chatapp-backend-s7sm.onrender.com';
 	const fetchMessages = async () => {
-		try {
-			const response = await fetch('https://chatapp-backend-s7sm.onrender.com');
-			const data = await response.json();
-			setMessages(data);
-		} catch (error) {
-			console.error('Error fetching messages:', error);
-		}
-	};
+    try {
+        const response = await fetch(`${BACKEND_URL}/messages`);
+        const data = await response.json();
+        setMessages(data);
+    } catch (error) {
+        console.error('Error fetching messages:', error);
+    }
+};
 
-	const sendMessage = async () => {
-		try {
-			await fetch('https://chatapp-backend-s7sm.onrender.com', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({ user, message }),
-			});
+const sendMessage = async () => {
+    try {
+        await fetch(`${BACKEND_URL}/messages`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ user, message }),
+        });
 
-			// Clear the message input after sending
-			setMessage('');
-			// Fetch messages to update the list
-			fetchMessages();
-		} catch (error) {
-			console.error('Error sending message:', error);
-		}
-	};
+        setMessage('');
+        fetchMessages();
+    } catch (error) {
+        console.error('Error sending message:', error);
+    }
+};
 
 	useEffect(() => {
 		// Fetch messages on component mount
